@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  valkey:
+    container_name: valkey
+    restart: unless-stopped
+    image: valkey/valkey:7.2.5-bookworm
+    command: valkey-server --loglevel warning
+    ports:
+      - 6379:6379
+      

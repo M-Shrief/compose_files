@@ -1,0 +1,18 @@
+services:
+  mongodb:
+    # Container name is used as ${host} when connecting to database
+    container_name: mongodb
+    image: mongo:7-jammy
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongodb
+      MONGO_INITDB_ROOT_PASSWORD: mongodb
+      MONGO_INITDB_DATABASE: mongodb
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - mongodb-data:/data/db
+    ports:
+      - 27017:27017
+
+volumes:
+  mongodb-data:

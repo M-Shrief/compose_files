@@ -1,0 +1,42 @@
+services:
+
+  miniflux:
+    image: docker.io/miniflux/miniflux:2.2.10
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://miniflux:miniflux@db/miniflux?sslmode=disable
+      - RUN_MIGRATIONS=1
+      - CREATE_ADMIN=1
+      - ADMIN_USERNAME=miniflux
+      - ADMIN_PASSWORD=miniflux
+
+
+  db:
+    image: docker.io/library/postgres:16.3-alpine
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=miniflux
+      - POSTGRES_PASSWORD=miniflux
+      - POSTGRES_DB=miniflux
+    volumes:
+      - .miniflux-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "miniflux"]
+      interval: 10s
+      start_period: 5s
+
+# connect with psql
+# psql -p 5432 -U miniflux -d miniflux -W -h localhost
+
+# Backup data with pg_dump
+# pg_dump -p 5432 -U miniflux -d miniflux -W -h localhost -f miniflux.dump
+
+# Restore data, Note: Make sure you create the database and restore the data before connecting miniflux service to it.
+# psql -p 5432 -U miniflux -W -h localhost -d miniflux < miniflux.dump

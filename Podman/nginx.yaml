@@ -1,0 +1,15 @@
+
+services:
+
+  nginx:
+    image: docker.io/library/nginx:1.28.0-bookworm
+    container_name: nginx
+    volumes:
+      - ./templates:/etc/nginx/templates
+    networks:
+      - forgejo
+    ports:
+      - "8080:80"
+    environment:
+      # - NGINX_HOST=foobar.com
+      - NGINX_PORT=80
