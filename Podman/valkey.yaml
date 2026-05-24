@@ -1,0 +1,26 @@
+services:
+  valkey:
+    container_name: valkey
+    image: docker.io/valkey/valkey:9.1.0-trixie # trixie is debian OS 13 version codename
+    command: valkey-server --requirepass ${VALKEY_PASSWORD} --appendonly yes --loglevel warning
+    environment: #use .env files in production
+      - VALKEY_PASSWORD=password
+    volumes:
+      - valkey_data:/data
+      - ./valkey.conf:/usr/local/etc/valkey/valkey.conf:ro
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli -a $$VALKEY_PASSWORD ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    networks:
+      - valkey-net
+
+volumes:
+  valkey_data:
+
+networks:
+  valkey-net:
+    driver: bridge
