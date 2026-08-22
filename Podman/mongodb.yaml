@@ -1,0 +1,21 @@
+services:
+  mongodb:
+    # Container name is used as ${host} when connecting to database
+    container_name: mongodb
+    image: docker.io/library/mongo:8.3.8-noble
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongodb
+      MONGO_INITDB_ROOT_PASSWORD: mongodb
+      MONGO_INITDB_DATABASE: mongodb
+    volumes:
+      #- ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./mongodb:/data/db
+    ports:
+      - 27017:27017
+
+# Connect with mongosh
+# $ mongosh --host <host> --port <port> --username <username> 
+# $ mongosh "mongodb://myUser:myPassword@192.168.1.50:27017/myDatabase?authSource=admin"
+# Create the database with an init.js file, or connect with mongosh then run:
+# $ use database-name
