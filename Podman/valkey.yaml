@@ -6,7 +6,7 @@ services:
     environment: #use .env files in production
       - VALKEY_PASSWORD=password
     volumes:
-      - valkey_data:/data
+      # - valkey_data:/data
       - ./valkey.conf:/usr/local/etc/valkey/valkey.conf:ro
     ports:
       - "6379:6379"
@@ -15,12 +15,12 @@ services:
       interval: 5s
       timeout: 3s
       retries: 3
-    networks:
-      - valkey-net
+#     networks:
+#       - valkey-net
 
-volumes:
-  valkey_data:
+# volumes:
+#   valkey_data:
 
-networks:
-  valkey-net:
-    driver: bridge
+# networks:
+#   valkey-net:
+#     driver: bridge
